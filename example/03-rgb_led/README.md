@@ -4,8 +4,6 @@
 
 RGB Demo 是一个基于 UNIRTOS 的 RGB LED 控制示例项目。该项目演示了如何在 UNIRTOS 平台上获取 GPIO 默认配置、配置 PINMUX 为 GPIO 功能、初始化 GPIO 输出方向，并通过任务周期性切换红、绿、蓝三路 LED 的点亮状态。通过此示例，开发者可以快速了解 UNIRTOS GPIO 与任务 API 的基本使用方法。
 
-**适用平台**：所有支持 UNIRTOS GPIO、PINCTRL 和任务调度能力的平台
-
 ## **模块介绍**
 
 三色 RGBLED 是**全彩发光二极管模块**，由红、绿、蓝三颗芯片封装在一起，可通过 PWM 调节亮度混合出任意颜色，广泛用于氛围灯、状态指示、交互提示、创客 DIY 场景；它能实现七彩渐变、呼吸、闪烁等效果，具备体积小、亮度高、3.3V/5V 兼容、驱动简单、寿命长等优点。
@@ -14,7 +12,7 @@ RGB Demo 是一个基于 UNIRTOS 的 RGB LED 控制示例项目。该项目演�
 
 LED引脚共地，当正负极形成电压差时，LED点亮，所以高电平LED亮灯。
 
-## 二、 连接示例
+## 连接示例
 
 根据表格和图片指导，将外设与开发板一一对应连接
 
@@ -29,38 +27,43 @@ LED引脚共地，当正负极形成电压差时，LED点亮，所以高电平LE
 
 ### 1. 开发环境搭建
 
-参考 [UNIRTOS 快速入门](https://docs.quectel.com/zh/UniRTOS/UniRTOS%E6%96%87%E6%A1%A3/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B.html) 文档，了解如何搭建开发环境，了解开发过程。
+参考 [UNIRTOS 快速入门](https://docs.quectel.com/zh/UniRTOS/UniRTOS%E6%96%87%E6%A1%A3/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B.html) 文档，了解如何搭建开发环境并完成基本开发流程。
 
-### 2. 获取项目
+### 2. 代码拉取
 
-RGB Demo 已位于 UniRTOS SDK 源码树中，无需单独克隆仓库。进入以下目录即可查看示例代码：
-
-```text
-unirtos/qos_applications/rgb_demos/
+```
+# 拉取示例仓库
+unirtos-cli new -r unirtos-quecduino-sensor-kit-demos
+# 进入该项目
+cd unirtos-quecduino-sensor-kit-demos-1.0.0/example/03-rgb_led
 ```
 
 ### 3. 项目结构
 
 ```text
-rgb_demos/
-├── CMakeLists.txt          # CMake 构建配置
-├── README.md               # 本文件
-└── unir_rgb_demo.c         # RGB LED 示例源代码
+03-rgb_led/
+├── CMakeLists.txt      # RGB Demo 局部构建配置
+├── env_config.json     # UniRTOS 工程环境配置
+├── unir_rgb_demo.c     # RGB LED 示例源代码
+└── README.md           # 本文件
 ```
 
 ### 4. 构建项目
 
-当前目录中已经提供 RGB Demo 的局部 CMakeLists.txt，用于生成静态库目标。
+拉取SDK与依赖库
 
-如果需要将该示例纳入 UniRTOS 应用统一构建流程，请先在以下入口文件中补充接线：
+```
+unirtos-cli env-setup
+```
+在 PowerShell 窗口执行固件编译命令：
 
-- qos_applications/Kconfig
-- qos_applications/CMakeLists.txt
+```
+unirtos-cli build -m EG800ZCN_LA -v EG800ZCNLAR01A01_OCPU_20260626
+```
+等待编译结束后，PowerShell 窗口末尾会提示固件编译结果：
 
-接入完成后，可在 unirtos 目录下运行以下命令进行构建：
-
-```text
-unirtos make EG800ZCN_LA EG800ZCNLAR01A01M04_BETA_OCPU_20260511
+```
+SUCCESS: Unirtos project built successfully!
 ```
 
 ### 5. 日志展示
@@ -166,4 +169,9 @@ GPIO 初始化接口。
 
 ## 贡献指南
 
-欢迎提交 Issue 和 Pull Request！
+欢迎参与共建，建议按以下方式提交：
+
+- 提交前先执行一次基础验证：env-setup、build、clean。
+- 使用清晰的提交说明，描述改动目的、影响范围和验证结果。
+- 新增功能或行为变化时，同步更新 README 与相关文档。
+- 通过 Issue 或 Pull Request 提交问题修复与功能改进。

@@ -4,8 +4,6 @@
 
 Button Demo 是一个基于 UNIRTOS 的按键中断示例项目。该项目演示了如何在 UNIRTOS 平台上解析 GPIO 默认配置、切换 PINMUX 到 GPIO 功能、注册 GPIO 中断回调，并在检测到按键按下时输出日志计数。通过此示例，开发者可以快速了解 UNIRTOS GPIO 中断相关 API 的基本使用方法。
 
-**适用平台**：所有支持 UNIRTOS GPIO、PINCTRL 与 GPIO 中断能力的平台
-
 ##  **模块介绍**
 
 按键模块是**最基础的数字输入模块**，通过轻触开关实现通断控制，输出高低电平信号，用于实现**人机交互、开关控制、触发指令、计数、模式切换**等功能，是嵌入式 / 物联网项目必备模块。
@@ -26,7 +24,7 @@ Button Demo 是一个基于 UNIRTOS 的按键中断示例项目。该项目演�
 
 vcc和电阻都在芯片内部，当按键断开时，流过电阻的电流称为灌电流，大概几十毫安，因此此时引脚为高电平。按下时与地接通为低电平
 
-## **二、** **连接示例**
+## **连接示例**
 
 根据表格和图片指导，将外设与开发板一一对应连接
 
@@ -40,38 +38,43 @@ vcc和电阻都在芯片内部，当按键断开时，流过电阻的电流称�
 
 ### 1. 开发环境搭建
 
-参考 [UNIRTOS 快速入门](https://docs.quectel.com/zh/UniRTOS/UniRTOS%E6%96%87%E6%A1%A3/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B.html) 文档，了解如何搭建开发环境及完成基本开发流程。
+参考 [UNIRTOS 快速入门](https://docs.quectel.com/zh/UniRTOS/UniRTOS%E6%96%87%E6%A1%A3/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B.html) 文档，了解如何搭建开发环境并完成基本开发流程。
 
-### 2. 获取项目
+### 2. 代码拉取
 
-Button Demo 已位于 UniRTOS SDK 源码树中，无需单独克隆仓库。进入以下目录即可查看示例代码：
-
-```text
-unirtos/qos_applications/button/button_demos/
+```
+# 拉取示例仓库
+unirtos-cli new -r unirtos-quecduino-sensor-kit-demos
+# 进入该项目
+cd unirtos-quecduino-sensor-kit-demos-1.0.0/example/02-key_interrupt
 ```
 
 ### 3. 项目结构
 
 ```text
-button_demos/
-├── CMakeLists.txt          # Button Demo 局部构建配置
-├── README.md               # 本文件
-└── button_demo.c           # 按键中断示例源代码
+02-key_interrupt/
+├── CMakeLists.txt      # Button Demo 局部构建配置
+├── env_config.json     # UniRTOS 工程环境配置
+├── button_demo.c       # 按键中断示例源代码
+└── README.md           # 本文件
 ```
 
 ### 4. 构建项目
 
-当前目录中已经提供 Button Demo 的局部 CMakeLists.txt，用于生成静态库目标。
+拉取SDK与依赖库
 
-如果需要将该示例纳入 UniRTOS 应用统一构建流程，请先在以下入口文件中补充接线：
+```
+unirtos-cli env-setup
+```
+在 PowerShell 窗口执行固件编译命令：
 
-- qos_applications/Kconfig
-- qos_applications/CMakeLists.txt
+```
+unirtos-cli build -m EG800ZCN_LA -v EG800ZCNLAR01A01_OCPU_20260626
+```
+等待编译结束后，PowerShell 窗口末尾会提示固件编译结果：
 
-接入完成后，可在 unirtos 根目录下使用类似如下命令进行构建：
-
-```text
-unirtos make EG800ZCN_LA EG800ZCNLAR01A01M04_BETA_OCPU_20260511
+```
+SUCCESS: Unirtos project built successfully!
 ```
 
 ### 5. 日志展示
@@ -173,4 +176,9 @@ GPIO 中断回调函数。
 
 ## 贡献指南
 
-欢迎提交 Issue 和 Pull Request。
+欢迎参与共建，建议按以下方式提交：
+
+- 提交前先执行一次基础验证：env-setup、build、clean。
+- 使用清晰的提交说明，描述改动目的、影响范围和验证结果。
+- 新增功能或行为变化时，同步更新 README 与相关文档。
+- 通过 Issue 或 Pull Request 提交问题修复与功能改进。

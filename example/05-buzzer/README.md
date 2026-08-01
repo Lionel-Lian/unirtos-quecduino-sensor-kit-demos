@@ -4,8 +4,6 @@
 
 Beep Demo 是一个基于 UniRTOS 的蜂鸣器驱动示例项目。该项目演示了如何在 UniRTOS 平台上查询 GPIO 默认配置、完成 PINMUX 切换、初始化 GPIO 输出方向，并通过后台任务周期性拉高或拉低控制电平驱动蜂鸣器鸣叫。通过此示例，开发者可以快速了解 UniRTOS GPIO、PINCTRL 和任务 API 的基本使用方法。
 
-**适用平台**：支持 UniRTOS平台
-
 ## **模块介绍**
 
 用 Arduino 可以完成的互动作品有很多，最常见也最常用的就是声光展示了，前面一直都 是在用 LED 小灯在做实验，本个实验就让大家的电路发出声音，能够发出声音的最常见的 元器件就是蜂鸣器和喇叭了，两者相比较蜂鸣器更简单和易用所以我们本实验采用蜂鸣器。
@@ -50,27 +48,46 @@ Beep Demo 是一个基于 UniRTOS 的蜂鸣器驱动示例项目。该项目演�
 
 ### 1. 开发环境搭建
 
-参考 [UNIRTOS 快速入门](https://docs.quectel.com/zh/UniRTOS/UniRTOS%E6%96%87%E6%A1%A3/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B.html) 文档，了解如何搭建开发环境和完成基础开发流程。
+参考 [UNIRTOS 快速入门](https://docs.quectel.com/zh/UniRTOS/UniRTOS%E6%96%87%E6%A1%A3/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B.html) 文档，了解如何搭建开发环境并完成基本开发流程。
 
-### 2. 项目结构
+### 2. 代码拉取
+
+```
+# 拉取示例仓库
+unirtos-cli new -r unirtos-quecduino-sensor-kit-demos
+# 进入该项目
+cd unirtos-quecduino-sensor-kit-demos-1.0.0/example/05-buzzer
+```
+
+### 3. 项目结构
 
 ```text
-beep/
-├── beep_demos/
-│   ├── CMakeLists.txt       # CMake 构建配置
-│   ├── README.md            # 本文件
-│   └── beep_demo.c          # 蜂鸣器示例源代码
+05-buzzer/
+├── CMakeLists.txt      # Beep Demo 局部构建配置
+├── env_config.json     # UniRTOS 工程环境配置
+├── beep_demo.c         # 蜂鸣器示例源代码
+└── README.md           # 本文件
 ```
 
-### 3. 构建项目
+### 4. 构建项目
 
-当前目录中的示例源码和子目录 CMakeLists 已就绪；如果希望作为内置应用参与整仓构建，需要先按照 `qos_applications` 下 demo 的接入规则，在应用总入口中补充对应目录和配置开关。完成接入后，可在 UniRTOS 根目录执行类似命令进行构建：
+拉取SDK与依赖库
 
-```bash
-unirtos make EG800ZCN_LA EG800ZCNLAR01A01M04_BETA_OCPU_20260511
+```
+unirtos-cli env-setup
+```
+在 PowerShell 窗口执行固件编译命令：
+
+```
+unirtos-cli build -m EG800ZCN_LA -v EG800ZCNLAR01A01_OCPU_20260626
+```
+等待编译结束后，PowerShell 窗口末尾会提示固件编译结果：
+
+```
+SUCCESS: Unirtos project built successfully!
 ```
 
-### 4. 日志展示
+### 5. 日志展示
 
 初始化成功后，可在日志中看到类似输出：
 
@@ -183,4 +200,9 @@ GPIO 电平设置封装函数。
 
 ## 贡献指南
 
-欢迎提交 Issue 和 Pull Request。
+欢迎参与共建，建议按以下方式提交：
+
+- 提交前先执行一次基础验证：env-setup、build、clean。
+- 使用清晰的提交说明，描述改动目的、影响范围和验证结果。
+- 新增功能或行为变化时，同步更新 README 与相关文档。
+- 通过 Issue 或 Pull Request 提交问题修复与功能改进。

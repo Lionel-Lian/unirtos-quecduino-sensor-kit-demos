@@ -4,8 +4,6 @@
 
 MIC Demo 是一个基于 UniRTOS 的麦克风阈值检测示例。该示例通过读取 ADC1 的电压值模拟麦克风声音强度检测，当采样值超过设定阈值时，点亮指定 GPIO 上的 LED 一段时间。通过此示例，开发者可以快速了解 UniRTOS 中 ADC 采样、GPIO 输出控制、PinMux 配置以及应用任务注册的基本使用方法。
 
-适用平台：所有支持 UniRTOS 且具备 ADC 与 GPIO 能力的平台
-
 ## **模块介绍**
 
 麦克风是**声电转换器件**的简称，也被称为声音检测传感器模块。它可以检测周围环境中的声音强度，并转换为电信号输出。它内部包含一个麦克风，可以捕捉声音信号。通过调节模块上的感敏度电位器，可以调节模块对声音的敏感度。它支持模拟输出模式，满足大部分应用及设计需求。
@@ -26,41 +24,46 @@ MIC Demo 是一个基于 UniRTOS 的麦克风阈值检测示例。该示例通�
 
 ### 1. 开发环境搭建
 
-参考 [UniRTOS 快速入门](https://docs.quectel.com/zh/UniRTOS/UniRTOS%E6%96%87%E6%A1%A3/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B.html) 文档，完成开发环境搭建并了解基本编译流程。
+参考 [UNIRTOS 快速入门](https://docs.quectel.com/zh/UniRTOS/UniRTOS%E6%96%87%E6%A1%A3/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B/%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B.html) 文档，了解如何搭建开发环境并完成基本开发流程。
 
-### 2. 获取项目
+### 2. 代码拉取
 
-MIC Demo 已内置在当前 UniRTOS SDK 中，无需额外克隆仓库。源码位于 qos_applications/mic_demos 目录。
+```
+# 拉取示例仓库
+unirtos-cli new -r unirtos-quecduino-sensor-kit-demos
+# 进入该项目
+cd unirtos-quecduino-sensor-kit-demos-1.0.0/example/04-mic
+```
 
-### 3. 使能项目
-
-在配置界面中使能 MIC Demo：
-
-- Kconfig 选项：CONFIG_QAPP_MIC_DB_DEMO
-- 菜单名称：MIC threshold detection demo
-
-该选项会同时选择音频流相关能力 QCM_AUDIO_STREAM_FUNC。
-
-### 4. 项目结构
+### 3. 项目结构
 
 ```text
-mic_demos/
-├── CMakeLists.txt          # CMake 构建配置
-├── README.md               # 本说明文档
-└── mic_demo.c              # MIC 阈值检测示例源码
+04-mic/
+├── CMakeLists.txt      # MIC Demo 局部构建配置
+├── env_config.json     # UniRTOS 工程环境配置
+├── mic_demo.c          # MIC 阈值检测示例源代码
+└── README.md           # 本文件
 ```
 
-### 5. 构建项目
+### 4. 构建项目
 
-在 UniRTOS 根目录下执行构建命令：
+拉取SDK与依赖库
 
-```bash
-unirtos make EG800ZCN_LA EG800ZCNLAR01A01M04_BETA_OCPU_20260511
+```
+unirtos-cli env-setup
+```
+在 PowerShell 窗口执行固件编译命令：
+
+```
+unirtos-cli build -m EG800ZCN_LA -v EG800ZCNLAR01A01_OCPU_20260626
+```
+等待编译结束后，PowerShell 窗口末尾会提示固件编译结果：
+
+```
+SUCCESS: Unirtos project built successfully!
 ```
 
-如果平台型号或版本不同，请替换为实际使用的目标平台与固件版本。
-
-### 6. 日志展示
+### 5. 日志展示
 
 初始化成功后，可以在日志中看到类似输出：
 
@@ -169,4 +172,9 @@ MIC Demo 的默认参数直接定义在 mic_demo.c 中：
 
 ## 贡献指南
 
-欢迎提交 Issue 和 Pull Request。
+欢迎参与共建，建议按以下方式提交：
+
+- 提交前先执行一次基础验证：env-setup、build、clean。
+- 使用清晰的提交说明，描述改动目的、影响范围和验证结果。
+- 新增功能或行为变化时，同步更新 README 与相关文档。
+- 通过 Issue 或 Pull Request 提交问题修复与功能改进。
