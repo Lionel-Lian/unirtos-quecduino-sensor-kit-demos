@@ -66,7 +66,7 @@ SUCCESS: Unirtos project built successfully!
 ### 5. 日志展示
 
 ```text
-[I/LOG_TAG_DEMO] KY-008 init ok, pin=31, gpio=31
+[I/LOG_TAG_DEMO] KY-008 init ok, pin=31
 ```
 
 后台任务会默认每隔 2 秒切换一次激光状态：

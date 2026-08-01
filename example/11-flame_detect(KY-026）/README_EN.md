@@ -71,7 +71,7 @@ SUCCESS: Unirtos project built successfully!
 After firmware flashing and startup, you can see similar output in the logs:
 
 ```text
-[I/LOG_TAG_DEMO] flame led init ok, pin=31, gpio=31
+[I/LOG_TAG_DEMO] flame led init ok, pin=31
 [I/LOG_TAG_DEMO] flame demo started
 ```
 

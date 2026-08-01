@@ -43,7 +43,7 @@ QuecDuino入门级传感器实验套件，是专为初学者、创客及教育�
 | 19   | [Temperature & Humidity Sensor (AHT20)](example/19-temperature_and_humidity_sensor(AHT20)/README.md) | 温湿度传感器作为常见的传感器之一，是一种装有湿敏和热敏元件，能够用来测量温度和湿度的传感器装置。 |
 | 20   | [Analog Piezoelectric Vibration Sensor](example/20-Simulated_Piezoelectric_Ceramic_Vibration_Sensor/README.md) | 模拟压电陶瓷震动传感器是一款用于检测振动、碰撞或者声波的传感器模块。它使用压电陶瓷技术，能够在受到压力或震动时输出相应的模拟信号。 |
 
-# EG800Z Duino 开发板使用指导
+# EG800Z Duino 开发板固件烧录&使用指导
 
 ## **硬件准备**
 
@@ -58,11 +58,13 @@ QuecDuino入门级传感器实验套件，是专为初学者、创客及教育�
 - **Git**：unirtos-cli使用该工具拉取SDK、库源码等，版本要求2.20及更高版本。
 - **unirtos-cli**：UniRTOS的命令行工具，用于一键拉取SDK、快速创建工程。
 - **USB驱动**：用于PC识别模块的USB枚举口，[点此获取](https://www.quectel.com.cn/download/quectel_windows_usb_drivery_v1-0_cn)。
-- *QFlash.exe**：模块固件烧录程序，用于烧录UniRTOS编译生成的固件，[点此获取](https://www.quectel.com.cn/download/qflash_v7-9_cn)。
+- **QFlash.exe**：模块固件烧录程序，用于烧录UniRTOS编译生成的固件，[点此获取](https://www.quectel.com.cn/download/qflash_v7-9_cn)。
 - **EPAT工具**：芯片厂商提供的日志捕获工具，用于查看模块运行日志以分析应用程序执行情况，[点此获取](https://www.quectel.com.cn/download/epat日志工具)。
 - **QCOM工具**：移远通信提供的COM口工具程序，用于执行和验证AT命令，[点此获取](https://www.quectel.com.cn/download/qcom_v1-8_cn)。
 
-在固件编译烧录前需要保证软件环境配置完成，参考[快速上手](https://www.quectel.com.cn/unirtos/docs?docs_page=快速上手/快速上手.html)。
+在固件编译烧录前需要保证软件环境配置完成，参考[快速上手]([UniRTOS文档中心 | 移远通信-全球物联网整体解决方案供应商](https://www.quectel.com.cn/unirtos/docs?docs_page=快速上手/快速上手.html))
+
+
 
 # 创建第一个应用-helloworld
 
@@ -86,7 +88,7 @@ unirtos-cli ls-demos
 unirtos-cli ls-demos [-f] [-j] [-d <project-dir>]
 ```
 
-- **功能描述**：输出出远程Demo及其版本列表。
+- **功能描述**：输出远程Demo及其版本列表。
 - **参数说明**：
 
 | 参数                | 说明                                                         |
@@ -102,7 +104,7 @@ unirtos-cli ls-demos [-f] [-j] [-d <project-dir>]
 继续在PowerShell窗口执行以下命令：
 
 ```PowerShell
-unirtos-cli new -r unirtos_helloworld_demos -d E:\unirtos-cli_demos
+unirtos-cli new -r unirtos_helloworld_demos -d E:\unirtos_demos
 ```
 
 执行完成后，工具将自动从官方Demo仓库下载[helloworld示例](https://github.com/UniRTOS/unirtos_helloworld_demos)，并生成新的项目工程。
@@ -140,7 +142,7 @@ unirtos-cli new [-r] <project-name> [-v <version>] [-d <project-dir>] [-f]
 unirtos-cli env-setup
 ```
 
-执行命令后，unirtos-cli会根据*env_config.json*的默认配置从远程拉取SDK到本地，默认存放路径为`C:\Users\<用户名>\.unirtos`。后续拉取相同版本时，将直接复用本地已缓存的SDK，无需再次从远程下载。
+执行命令后，unirtos-cli会根据*env_config.json*的默认配置从远程拉取SDK到本地，默认存放路径为`C:``\``Users\<用户名>\.unirtos`。后续拉取相同版本时，将直接复用本地已缓存的SDK，无需再次从远程下载。
 
 命令执行结果如图：
 
@@ -194,7 +196,7 @@ unirtos_helloworld_demos-1.0.0/
 
 ### SDK存放路径
 
-默认路径为*C:\Users\ <用户名> \ .unirtos*，拉取的SDK位于该路径下的“**sdk**”目录。如图为1.0.1版SDK：
+默认路径为*C:\Users\<用户名>\.unirtos*，拉取的SDK位于该路径下的“**sdk**”目录。如图为1.0.1版SDK：
 
 ![](media/build2.png)
 
@@ -330,16 +332,3 @@ unirtos-cli build [-d <project-dir>] [-j <jobs>] [-m <module>] [-v <version>]
 使用“**Ctrl+F**”搜索“**hello world**”，点击“**Find Previous**”查看**hello world**程序日志：
 
 ![](media/test7.png)
-
-## 论坛社区
-
-[点此进入](https://forumschinese.quectel.com/c/66-category/66)
-
-## 贡献指南
-
-欢迎参与共建，建议按以下方式提交：
-
-- 提交前先执行一次基础验证：env-setup、build、clean。
-- 使用清晰的提交说明，描述改动目的、影响范围和验证结果。
-- 新增功能或行为变化时，同步更新 README 与相关文档。
-- 通过 Issue 或 Pull Request 提交问题修复与功能改进。

@@ -9,7 +9,6 @@
 #include "qcm_proj_config.h"
 #include "qosa_gpio.h"
 #include "qosa_log.h"
-#include "qosa_pinctrl.h"
 #include "qosa_sys.h"
 #include "unirtos_app_init_registry.h"
 
@@ -26,8 +25,6 @@ typedef struct
 {
 	/* 激光模块控制 PIN 编号。 */
 	qosa_uint8_t      pin_num;
-	/* PIN 映射后的 GPIO 编号。 */
-	qosa_gpio_num_e   gpio_num;
 	/* 打开激光的有效电平。 */
 	qosa_gpio_level_e active_level;
 	/* 关闭激光的无效电平。 */
@@ -36,7 +33,6 @@ typedef struct
 
 static ky008_laser_t g_ky008_laser = {
 	.pin_num = KY008_PIN_NUM,
-	.gpio_num = QOSA_GPIO_31,
 	.active_level = KY008_ACTIVE_LEVEL,
 	.inactive_level = QOSA_GPIO_LEVEL_LOW,
 };
@@ -46,47 +42,30 @@ static qosa_task_t g_ky008_task = QOSA_NULL;
 /* 初始化 KY-008 激光模块控制 GPIO。 */
 static int ky008_laser_init(ky008_laser_t *laser)
 {
-	qosa_pin_cfg_t pin_cfg = {0};
 	qosa_gpio_error_e gpio_ret;
-	qosa_pinctrl_error_e pin_ret;
 
 	laser->inactive_level = (laser->active_level == QOSA_GPIO_LEVEL_HIGH) ? QOSA_GPIO_LEVEL_LOW : QOSA_GPIO_LEVEL_HIGH;
 
-	gpio_ret = qosa_get_pin_default_cfg(laser->pin_num, &pin_cfg);
+	gpio_ret = qosa_gpio_init((qosa_gpio_num_e)laser->pin_num, QOSA_GPIO_DIRECTION_OUTPUT, QOSA_GPIO_PULL_NONE, laser->inactive_level);
 	if (gpio_ret != QOSA_GPIO_SUCCESS)
 	{
-		QLOGE("KY-008 get pin cfg failed, pin=%u, ret=%d", laser->pin_num, gpio_ret);
+		QLOGE("KY-008 pin init failed, pin=%u, ret=%d", laser->pin_num, gpio_ret);
 		return -1;
 	}
 
-	pin_ret = qosa_pin_set_func((qosa_pin_num_e)pin_cfg.pin_num, pin_cfg.gpio_func);
-	if (pin_ret != QOSA_PINCTRL_SUCCESS)
-	{
-		QLOGE("KY-008 set pin func failed, pin=%u, func=%u, ret=%d", pin_cfg.pin_num, pin_cfg.gpio_func, pin_ret);
-		return -1;
-	}
-
-	gpio_ret = qosa_gpio_init(pin_cfg.gpio_num, QOSA_GPIO_DIRECTION_OUTPUT, QOSA_GPIO_PULL_NONE, laser->inactive_level);
-	if (gpio_ret != QOSA_GPIO_SUCCESS)
-	{
-		QLOGE("KY-008 gpio init failed, gpio=%d, ret=%d", pin_cfg.gpio_num, gpio_ret);
-		return -1;
-	}
-
-	laser->gpio_num = pin_cfg.gpio_num;
-	QLOGI("KY-008 init ok, pin=%u, gpio=%d, active_level=%d", laser->pin_num, laser->gpio_num, laser->active_level);
+	QLOGI("KY-008 init ok, pin=%u, active_level=%d", laser->pin_num, laser->active_level);
 	return 0;
 }
 
-/* 写入激光模块 GPIO 电平。 */
+/* 写入激光模块 PIN 电平。 */
 static void ky008_laser_write(const ky008_laser_t *laser, qosa_gpio_level_e level)
 {
 	qosa_gpio_error_e ret;
 
-	ret = qosa_gpio_set_level(laser->gpio_num, level);
+	ret = qosa_gpio_set_level((qosa_gpio_num_e)laser->pin_num, level);
 	if (ret != QOSA_GPIO_SUCCESS)
 	{
-		QLOGE("KY-008 set level failed, gpio=%d, level=%d, ret=%d", laser->gpio_num, level, ret);
+		QLOGE("KY-008 set level failed, pin=%u, level=%d, ret=%d", laser->pin_num, level, ret);
 	}
 }
 

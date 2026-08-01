@@ -68,7 +68,7 @@ SUCCESS: Unirtos project built successfully!
 ### 5. Log Display
 
 ```text
-[I/LOG_TAG_DEMO] KY-008 init ok, pin=31, gpio=31
+[I/LOG_TAG_DEMO] KY-008 init ok, pin=31
 ```
 
 The background task will switch laser state every 2 seconds by default:
