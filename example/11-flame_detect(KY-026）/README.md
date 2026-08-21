@@ -33,13 +33,13 @@ KY-026 火焰检测模块可感知特定波段的火焰光信号，常用于火�
 # 拉取示例仓库
 unirtos-cli new -r unirtos-quecduino-sensor-kit-demos
 # 进入该项目
-cd unirtos-quecduino-sensor-kit-demos-1.0.0/example/11-flame_detect(KY-026）
+cd unirtos-quecduino-sensor-kit-demos-1.0.0/example/11-flame_detect（KY-026）
 ```
 
 ### 3. 项目结构
 
 ```text
-11-flame_detect(KY-026）/
+11-flame_detect（KY-026）/
 ├── CMakeLists.txt      # KY-026 Demo 局部构建配置
 ├── env_config.json     # UniRTOS 工程环境配置
 ├── flame_demo.c        # 火焰检测 ADC 示例源代码
@@ -69,7 +69,7 @@ SUCCESS: Unirtos project built successfully!
 固件烧录后开机启动，可在日志中看到类似输出：
 
 ```text
-[I/LOG_TAG_DEMO] flame led init ok, pin=31, gpio=31
+[I/LOG_TAG_DEMO] flame led init ok, pin=31
 [I/LOG_TAG_DEMO] flame demo started
 ```
 

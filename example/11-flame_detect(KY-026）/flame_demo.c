@@ -10,13 +10,12 @@
 #include "qosa_adc.h"
 #include "qosa_gpio.h"
 #include "qosa_log.h"
-#include "qosa_pinctrl.h"
 #include "qosa_sys.h"
 #include "unirtos_app_init_registry.h"
 
 #define QOS_LOG_TAG LOG_TAG_DEMO
 
-/* 火焰传感器示例参数：ADC 通道、报警 LED 引脚、阈值和任务配置。 */
+/* 火焰传感器示例参数：ADC 通道、报警 LED PIN、阈值和任务配置。 */
 #define FLAME_ADC_CHANNEL              QOSA_ADC1_CHANNEL
 #define FLAME_LED_PIN_NUM              31
 #define FLAME_SAFE_THRESHOLD_MV        100
@@ -32,14 +31,11 @@ typedef struct
 	qosa_adc_channel_e adc_channel;
 	/* 报警 LED 使用的 PIN 编号。 */
 	qosa_uint8_t       led_pin_num;
-	/* PIN 映射后的 GPIO 编号。 */
-	qosa_gpio_num_e    led_gpio_num;
 } flame_sensor_t;
 
 static flame_sensor_t g_flame_sensor = {
 	.adc_channel = FLAME_ADC_CHANNEL,
 	.led_pin_num = FLAME_LED_PIN_NUM,
-	.led_gpio_num = QOSA_GPIO_31,
 };
 
 static qosa_task_t g_flame_task = QOSA_NULL;
@@ -47,33 +43,16 @@ static qosa_task_t g_flame_task = QOSA_NULL;
 /* 初始化火焰报警 LED 的 GPIO。 */
 static int flame_led_init(flame_sensor_t *sensor)
 {
-	qosa_pin_cfg_t pin_cfg = {0};
 	qosa_gpio_error_e gpio_ret;
-	qosa_pinctrl_error_e pin_ret;
 
-	gpio_ret = qosa_get_pin_default_cfg(sensor->led_pin_num, &pin_cfg);
+	gpio_ret = qosa_gpio_init((qosa_gpio_num_e)sensor->led_pin_num, QOSA_GPIO_DIRECTION_OUTPUT, QOSA_GPIO_PULL_NONE, QOSA_GPIO_LEVEL_LOW);
 	if (gpio_ret != QOSA_GPIO_SUCCESS)
 	{
-		QLOGE("flame get led pin cfg failed, pin=%u, ret=%d", sensor->led_pin_num, gpio_ret);
+		QLOGE("flame led pin init failed, pin=%u, ret=%d", sensor->led_pin_num, gpio_ret);
 		return -1;
 	}
 
-	pin_ret = qosa_pin_set_func((qosa_pin_num_e)pin_cfg.pin_num, pin_cfg.gpio_func);
-	if (pin_ret != QOSA_PINCTRL_SUCCESS)
-	{
-		QLOGE("flame set led pin func failed, pin=%u, func=%u, ret=%d", pin_cfg.pin_num, pin_cfg.gpio_func, pin_ret);
-		return -1;
-	}
-
-	gpio_ret = qosa_gpio_init(pin_cfg.gpio_num, QOSA_GPIO_DIRECTION_OUTPUT, QOSA_GPIO_PULL_NONE, QOSA_GPIO_LEVEL_LOW);
-	if (gpio_ret != QOSA_GPIO_SUCCESS)
-	{
-		QLOGE("flame led gpio init failed, gpio=%d, ret=%d", pin_cfg.gpio_num, gpio_ret);
-		return -1;
-	}
-
-	sensor->led_gpio_num = pin_cfg.gpio_num;
-	QLOGI("flame led init ok, pin=%u, gpio=%d", sensor->led_pin_num, sensor->led_gpio_num);
+	QLOGI("flame led init ok, pin=%u", sensor->led_pin_num);
 	return 0;
 }
 
@@ -99,10 +78,10 @@ static void flame_led_set(const flame_sensor_t *sensor, qosa_gpio_level_e level)
 {
 	qosa_gpio_error_e ret;
 
-	ret = qosa_gpio_set_level(sensor->led_gpio_num, level);
+	ret = qosa_gpio_set_level((qosa_gpio_num_e)sensor->led_pin_num, level);
 	if (ret != QOSA_GPIO_SUCCESS)
 	{
-		QLOGE("flame led set failed, gpio=%d, level=%d, ret=%d", sensor->led_gpio_num, level, ret);
+		QLOGE("flame led set failed, pin=%u, level=%d, ret=%d", sensor->led_pin_num, level, ret);
 	}
 }
 
